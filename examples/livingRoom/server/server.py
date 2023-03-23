@@ -44,18 +44,16 @@ async def handler(current_client, path):
     asyncio.get_event_loop().create_task(send_position())
     while True:
         data = await current_client.recv()
-        data = json.loads(data)
-        print(data)
-        if "type" in list(data.keys()):
+        json_data = json.loads(data)
+        print(json_data)
+        if "type" in list(json_data.keys()):
             if data["type"] == "coordinates":
-                position = json.dumps(data["position"])
+                position = data["position"]
                 print(position)
-                direction = data["direction"]
                 for client in connected_clients:
                     data = {
                         "client": str(client.id),
                         "position": position,
-                        "direction": direction,
                         "type": "coordinates",
                     }
                     client_positions[str(client.id)] = list(position.values())
