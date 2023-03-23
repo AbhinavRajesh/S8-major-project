@@ -47,8 +47,8 @@ async def handler(current_client, path):
         json_data = json.loads(data)
         print(json_data)
         if "type" in list(json_data.keys()):
-            if data["type"] == "coordinates":
-                position = data["position"]
+            if json_data["type"] == "coordinates":
+                position = json_data["position"]
                 print(position)
                 for client in connected_clients:
                     data = {
