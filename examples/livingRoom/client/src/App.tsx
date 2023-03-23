@@ -3,10 +3,10 @@ import "./App.css";
 import { VRButton, XR, Controllers, Hands } from "@react-three/xr";
 import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
 import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
-import Controller from "./utils/controller";
 import Avatars from "./utils/Avatars";
 import Room from "./Room";
 import { SERVER } from "./infrastructure";
+import Controller from "./utils/Controller";
 
 function App() {
   const [avatarPositions, setAvatarPositions] = useState([
@@ -17,6 +17,7 @@ function App() {
 
   const handleStream = () => {
     SERVER.receive((data) => {
+      console.log("New data recieved");
       const jsonData = JSON.parse(data);
       if (jsonData.type === "coordinates") {
         setAvatarPositions((prev: any) => {
@@ -36,8 +37,6 @@ function App() {
       <VRButton />
       <Canvas
         camera={{
-          // near: 0.1,
-          // far: 100,
           position: [0, 0, 0],
           manual: true,
         }}

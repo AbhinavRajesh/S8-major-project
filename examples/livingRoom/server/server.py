@@ -25,7 +25,7 @@ async def logger(current_client):
 async def send_position():
     global connected_clients
     while True:
-        await asyncio.sleep(5)
+        await asyncio.sleep(0.2)
         for client in connected_clients:
             data = {
                 "client": str(client.id),

@@ -8,8 +8,6 @@ Title: 634230009 My Avatar
 */
 
 import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
 
 const Avatar = (props: any) => {
   const { nodes, materials } = useGLTF(props.model) as any;
@@ -17,7 +15,15 @@ const Avatar = (props: any) => {
   console.log(`Created at position: ${props.position}`);
 
   return (
-    <group {...props}>
+    <group
+      {...props}
+      position={[
+        props.position[0],
+        props.position[1] - 1.6,
+        props.position[2] + 0.1,
+      ]}
+      rotation={[0, Math.PI, 0]}
+    >
       <group rotation={[-Math.PI / 2, 0, 0]} scale={0.97}>
         <group rotation={[Math.PI / 2, 0, 0]}>
           <primitive object={nodes.GLTF_created_0_rootJoint} />
