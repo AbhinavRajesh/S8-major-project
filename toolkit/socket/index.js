@@ -1,30 +1,30 @@
 const handleNewClient = require("./connection");
 const handleCoordinates = require("./coordinates");
+const handleVoiceChannel = require("./voice");
 
 // Object of all active projects
-const socket = (io, projects) => {
+const socket = (io, connections) => {
   io.on("connection", (socket) => {
     console.log("Made socket connection");
+    handleNewClient(socket, connections);
 
-    socket.on("new client", (data) => handleNewClient(data, socket, projects));
-    socket.on("coordinates", (data) => handleCoordinates(data, projects));
-    socket.on("voice", (_data) => console.log("TODO"));
+    socket.on("coordinates", (data) => handleCoordinates(data, connections));
+    socket.on("voice", (data) =>
+      handleVoiceChannel(data, io, socket, connections)
+    );
   });
 
   // Send all project data to every client on every 5 seconds
   setInterval(() => {
-    console.log("Emitting: ", projects);
-    io.emit(JSON.stringify(projects));
-    handleEmitToServers(projects);
+    console.log("Emitting: ", connections);
+    io.emit(JSON.stringify(connections));
+    handleEmitToServers(connections);
   }, 5000);
 };
 
-const handleEmitToServers = (projects) => {
-  for (const roomId in projects) {
-    const project = projects[roomId] ?? {};
-    if (project?.serverEndpoint) {
-      project?.serverEndpoint?.emit("sync", JSON.stringify(projects));
-    }
+const handleEmitToServers = (connections) => {
+  if (connections?.serverEndpoint) {
+    connections?.serverEndpoint?.emit("sync", JSON.stringify(connections));
   }
 };
 
