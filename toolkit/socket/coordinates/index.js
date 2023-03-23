@@ -1,14 +1,8 @@
-const handleCoordinates = (data, projects) => {
-  const { roomId, clientId, coordinates } = data;
+const handleCoordinates = (data, connections) => {
+  const jsonData = JSON.parse(data);
+  const { clientId, coordinates } = jsonData;
 
-  projects[roomId] = {
-    connectedClient: {
-      [clientId]: {
-        ...projects[roomId].connectedClient[clientId],
-        coordinates,
-      },
-    },
-  };
+  connections.clients[clientId] = coordinates;
 };
 
 module.exports = handleCoordinates;
