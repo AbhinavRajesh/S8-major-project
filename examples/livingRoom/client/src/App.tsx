@@ -3,10 +3,11 @@ import "./App.css";
 import { VRButton, XR, Controllers, Hands } from "@react-three/xr";
 import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
 import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
+import Controller from "./utils/Controller";
 import Avatars from "./utils/Avatars";
 import Room from "./Room";
 import { SERVER } from "./infrastructure";
-import Controller from "./utils/Controller";
+import AudioChannel from "./Audio";
 
 function App() {
   const [avatarPositions, setAvatarPositions] = useState([
@@ -45,6 +46,7 @@ function App() {
           <PerspectiveCamera position={[0, 0, 0]} makeDefault manual />
           <Controllers />
           <Hands />
+          <AudioChannel />
           {/* <OrbitControls
             maxPolarAngle={Math.PI / 2}
             minPolarAngle={0}

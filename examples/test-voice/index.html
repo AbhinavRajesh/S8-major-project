@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Voice</title>
+  </head>
+  <body>
+    <h1>This is just to test</h1>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"
+      integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      window.onload = () => main();
+
+      const socket = io(
+        "https://abhinavrajesh-orange-space-waffle-rw5rg5456qfxgj6-8000.preview.app.github.dev"
+      );
+
+      const main = () => {
+        if (navigator && navigator.mediaDevices) {
+          navigator.mediaDevices
+            .getUserMedia({ audio: true })
+            .then((stream) => {
+              const mediaRecorder = new MediaRecorder(stream);
+              mediaRecorder.start();
+
+              let audioChunks = [];
+
+              mediaRecorder.addEventListener("dataavailable", (e) => {
+                audioChunks.push(e.data);
+              });
+
+              mediaRecorder.addEventListener("stop", () => {
+                const audioBlob = new Blob(audioChunks);
+                audioChunks = [];
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(audioBlob);
+                fileReader.onloadend = () => {
+                  const base64String = fileReader.result;
+                  socket.emit("voice", base64String);
+                };
+
+                mediaRecorder.start();
+
+                setTimeout(() => {
+                  mediaRecorder.stop();
+                }, 750);
+              });
+
+              setTimeout(() => {
+                mediaRecorder.stop();
+              }, 750);
+            });
+
+          socket.on("voice", (data) => {
+            const audio = new Audio(data);
+            audio.play();
+          });
+        }
+      };
+    </script>
+  </body>
+</html>

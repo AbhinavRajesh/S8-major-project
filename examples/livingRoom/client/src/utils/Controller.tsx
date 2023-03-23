@@ -26,7 +26,7 @@ const Controller = () => {
     };
   }, []);
 
-  return null;
+  return <></>;
 };
 
 export default Controller;
