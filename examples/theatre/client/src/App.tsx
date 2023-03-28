@@ -7,6 +7,7 @@ import "./App.css";
 import sampleVideo from "./assets/video/sample_video.mp4";
 import Hall from "./Hall";
 import { socket } from "./utils/socket";
+import Avatars from "./utils/Avatars";
 
 interface IConnections {
   serverEndpoint: string;
@@ -17,8 +18,6 @@ interface IConnections {
 }
 
 const Theatre = () => {
-  const [avatarPositions, setAvatarPositions] = useState<number[][]>([]);
-
   const [video] = useState(() => {
     const vid = document.createElement("video");
     vid.src = sampleVideo;
@@ -34,17 +33,6 @@ const Theatre = () => {
       const connections = JSON.parse(data) as IConnections;
       console.log("stream", connections.seekTime);
       video.currentTime = connections.seekTime;
-    });
-
-    socket.on("connections", (data) => {
-      const connections = JSON.parse(data) as IConnections;
-      // console.log("[CONNECTIONS]: ", connections);
-      const coordinates: number[][] = [];
-      Object.keys(connections.clients).map((clientId) => {
-        coordinates.push(connections.clients[clientId]);
-      });
-      // console.log("COORDINATES: ", coordinates);
-      setAvatarPositions(coordinates);
     });
 
     setInterval(() => {
@@ -158,6 +146,25 @@ const Controller = () => {
 };
 
 function App() {
+  const [avatarPositions, setAvatarPositions] = useState<number[][]>([]);
+
+  const handleCoordinates = () => {
+    socket.on("connections", (data) => {
+      const connections = JSON.parse(data) as IConnections;
+      // console.log("[CONNECTIONS]: ", connections);
+      const coordinates: number[][] = [];
+      Object.keys(connections.clients).map((clientId) => {
+        coordinates.push(connections.clients[clientId]);
+      });
+      // console.log("COORDINATES: ", coordinates);
+      setAvatarPositions(coordinates);
+    });
+  };
+
+  useEffect(() => {
+    handleCoordinates();
+  }, []);
+
   // useEffect(() => {
   //   function handleControllerInput(event: any) {
   //     const gamepad = event.gamepad;
@@ -185,7 +192,6 @@ function App() {
       >
         <XR>
           <Controllers />
-          <Controller />
           <Hands />
           <OrbitControls
             maxPolarAngle={Math.PI / 2}
@@ -200,9 +206,11 @@ function App() {
             position={[-4, 5, 2]}
           />
           <Suspense fallback={<Theatre />}>
+            <Avatars positions={avatarPositions} />
             <Theatre />
             <Controls />
             <Hall />
+            <Controller />
           </Suspense>
         </XR>
       </Canvas>
