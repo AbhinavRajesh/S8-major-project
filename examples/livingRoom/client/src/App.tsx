@@ -21,8 +21,9 @@ function App() {
   const [avatarPositions, setAvatarPositions] = useState<number[][]>([]);
 
   const handleCoordinates = () => {
-    socket.on("coordinates", (data) => {
+    socket.on("connections", (data) => {
       const connections = JSON.parse(data) as IConnections;
+      console.log("[CONNECTIONS]: ", connections)
       const coordinates: number[][] = [];
       Object.keys(connections.clients).map((clientId) => {
         coordinates.push(connections.clients[clientId]);

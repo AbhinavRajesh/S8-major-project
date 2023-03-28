@@ -21,7 +21,7 @@ const socket = (io, connections) => {
   // Send all project data to every client on every 5 seconds
   setInterval(() => {
     console.log("Emitting: ", connections);
-    io.emit(JSON.stringify(connections));
+    io.emit("connections", JSON.stringify(connections));
     handleEmitToServers(connections);
   }, 5000);
 };
