@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { io } from "socket.io-client"
 
 const AudioChannel = () => {
-    const socket = io("https://abhinavrajesh-orange-space-waffle-rw5rg5456qfxgj6-8000.preview.app.github.dev")
+    const socket = io("https://worried-pie-production.up.railway.app/")
 
     useEffect(() => {
         handleVoiceChannel()
