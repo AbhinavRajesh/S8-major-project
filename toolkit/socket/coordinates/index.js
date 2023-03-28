@@ -1,8 +1,8 @@
 const handleCoordinates = (data, connections, clientId) => {
   const jsonData = JSON.parse(data);
-  const { coordinates } = jsonData;
+  const { position } = jsonData;
 
-  connections.clients[clientId] = coordinates;
+  connections.clients[clientId] = position;
 };
 
 module.exports = handleCoordinates;
