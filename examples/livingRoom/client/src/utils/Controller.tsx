@@ -19,7 +19,7 @@ const Controller = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setPaused(() => false);
-    }, 5000);
+    }, 500);
 
     return () => {
       clearInterval(interval);

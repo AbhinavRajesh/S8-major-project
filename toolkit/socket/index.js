@@ -23,7 +23,7 @@ const socket = (io, connections) => {
     console.log("Emitting: ", connections);
     io.emit("connections", JSON.stringify(connections));
     handleEmitToServers(connections);
-  }, 5000);
+  }, 500);
 };
 
 const handleEmitToServers = (connections) => {
