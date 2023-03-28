@@ -8,7 +8,7 @@ const socket = (io, connections) => {
     console.log("Made socket connection: ", socket.id);
     handleNewClient(socket, connections);
 
-    socket.on("coordinates", (data) => handleCoordinates(data, connections));
+    socket.on("coordinates", (data) => handleCoordinates(data, connections, socket.id));
     socket.on("voice", (data) =>
       handleVoiceChannel(data, io, socket, connections)
     );
