@@ -28,7 +28,7 @@ const Theatre = () => {
     return vid;
   });
 
-  const handleCoordinates = () => {
+  const handleStream = () => {
     socket.on("stream", (data) => {
       const connections = JSON.parse(data) as IConnections;
       console.log("stream", connections.seekTime);
@@ -44,7 +44,7 @@ const Theatre = () => {
   };
 
   useEffect(() => {
-    handleCoordinates();
+    handleStream();
   }, []);
 
   return (
@@ -152,12 +152,16 @@ function App() {
     socket.on("connections", (data) => {
       const connections = JSON.parse(data) as IConnections;
       // console.log("[CONNECTIONS]: ", connections);
-      const coordinates: number[][] = [];
+      let coordinates: number[][] = [];
       Object.keys(connections.clients).map((clientId) => {
         coordinates.push(connections.clients[clientId]);
       });
       // console.log("COORDINATES: ", coordinates);
-      setAvatarPositions(coordinates);
+      let corrected = coordinates.map((c) => {
+        c[1] += 1.5;
+        return c;
+      });
+      setAvatarPositions(corrected);
     });
   };
 
