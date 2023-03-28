@@ -6,32 +6,34 @@ import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
 import Controller from "./utils/Controller";
 import Avatars from "./utils/Avatars";
 import Room from "./Room";
-import { SERVER } from "./infrastructure";
 import AudioChannel from "./Audio";
+import { io } from "socket.io-client";
+
+interface IConnections {
+  serverEndpoint: string;
+  clients: {
+    [clientId: string]: number[];
+  };
+}
 
 function App() {
-  const [avatarPositions, setAvatarPositions] = useState([
-    [0, 0, 0],
-    [0, 1, 0],
-    [1, 0, 0],
-  ]);
+  const socket = io("https://worried-pie-production.up.railway.app");
+  const [avatarPositions, setAvatarPositions] = useState<number[][]>([]);
 
-  const handleStream = () => {
-    SERVER.receive((data) => {
-      console.log("New data recieved");
-      const jsonData = JSON.parse(data);
-      if (jsonData.type === "coordinates") {
-        setAvatarPositions((prev: any) => {
-          return [...jsonData.positions];
-        });
-      }
+  const handleCoordinates = () => {
+    socket.on("coordinates", (data) => {
+      const connections = JSON.parse(data) as IConnections;
+      const coordinates: number[][] = [];
+      Object.keys(connections.clients).map((clientId) => {
+        coordinates.push(connections.clients[clientId]);
+      });
+      setAvatarPositions(coordinates);
     });
   };
 
   useEffect(() => {
-    SERVER.start();
-    handleStream();
-  });
+    handleCoordinates();
+  }, []);
 
   return (
     <>
