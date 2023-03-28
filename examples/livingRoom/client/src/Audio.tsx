@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { io } from "socket.io-client"
+import { socket } from "./utils/socket"
 
 const AudioChannel = () => {
-    const socket = io("https://worried-pie-production.up.railway.app/")
 
     useEffect(() => {
         handleVoiceChannel()

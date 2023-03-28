@@ -7,7 +7,7 @@ import Controller from "./utils/Controller";
 import Avatars from "./utils/Avatars";
 import Room from "./Room";
 import AudioChannel from "./Audio";
-import { io } from "socket.io-client";
+import { socket } from "./utils/socket"
 
 interface IConnections {
   serverEndpoint: string;
@@ -17,7 +17,6 @@ interface IConnections {
 }
 
 function App() {
-  const socket = io("https://worried-pie-production.up.railway.app");
   const [avatarPositions, setAvatarPositions] = useState<number[][]>([]);
 
   const handleCoordinates = () => {
