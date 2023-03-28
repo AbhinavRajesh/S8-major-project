@@ -1,22 +1,42 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
 import { VRButton, XR, Controllers, Hands } from "@react-three/xr";
-import { OrbitControls, useTexture } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import "./App.css";
 import sampleVideo from "./assets/video/sample_video.mp4";
 import Hall from "./Hall";
+import { socket } from "./utils/socket";
+
+interface IConnections {
+  serverEndpoint: string;
+  clients: {
+    [clientId: string]: number[];
+  };
+}
 
 const Theatre = () => {
+  const [seek, setSeek] = useState(0);
   const [video] = useState(() => {
     const vid = document.createElement("video");
     vid.src = sampleVideo;
     vid.crossOrigin = "Anonymous";
     vid.loop = true;
-    vid.muted = false;
+    vid.muted = true;
     vid.play();
     return vid;
   });
+
+  const handleSeektime = () => {
+    socket.on("stream", (data) => {
+      const seekTime = JSON.parse(data) as number;
+      setSeek(seekTime);
+    });
+  };
+
+  useEffect(() => {
+    handleSeektime();
+  }, []);
 
   return (
     <>
@@ -27,9 +47,6 @@ const Theatre = () => {
             <videoTexture attach="map" args={[video]} />
             <videoTexture attach="emissiveMap" args={[video]} />
           </meshStandardMaterial>
-          {/* <meshBasicMaterial attach="material" map={texture} >
-            <videoTexture />
-          </meshBasicMaterial> */}
         </mesh>
       </group>
     </>

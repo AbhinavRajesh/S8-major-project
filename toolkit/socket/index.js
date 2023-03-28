@@ -1,5 +1,6 @@
-const handleNewClient = require("./connection");
+const { handleNewClient, handleDeleteClient } = require("./client");
 const handleCoordinates = require("./coordinates");
+const handleStream = require("./stream");
 const handleVoiceChannel = require("./voice");
 
 // Object of all active projects
@@ -8,14 +9,15 @@ const socket = (io, connections) => {
     console.log("Made socket connection: ", socket.id);
     handleNewClient(socket, connections);
 
-    socket.on("coordinates", (data) => handleCoordinates(data, connections, socket.id));
+    socket.on("stream", (data) => handleStream(data, connections));
+
+    socket.on("coordinates", (data) =>
+      handleCoordinates(data, connections, socket.id)
+    );
     socket.on("voice", (data) =>
       handleVoiceChannel(data, io, socket, connections)
     );
-    socket.on("disconnect", () => {
-      console.log("[DELETING]: ", socket.id)
-      delete connections.clients[socket.id]
-    })
+    socket.on("disconnect", () => handleDeleteClient(connections, socket.id));
   });
 
   // Send all project data to every client on every 5 seconds

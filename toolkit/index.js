@@ -24,6 +24,8 @@ const server = app.listen(PORT, () => {
 const activeConnections = {
   serverEndpoint: serverConfig.serverEndpoint,
   clients: {},
+  seekTime: 0,
+  admin: "",
 };
 const ioServer = socketio(server, {
   cors: {
