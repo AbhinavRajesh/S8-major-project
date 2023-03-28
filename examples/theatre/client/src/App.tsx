@@ -13,10 +13,12 @@ interface IConnections {
   clients: {
     [clientId: string]: number[];
   };
+  seekTime: number;
 }
 
 const Theatre = () => {
-  const [seek, setSeek] = useState(0);
+  const [avatarPositions, setAvatarPositions] = useState<number[][]>([]);
+
   const [video] = useState(() => {
     const vid = document.createElement("video");
     vid.src = sampleVideo;
@@ -27,15 +29,34 @@ const Theatre = () => {
     return vid;
   });
 
-  const handleSeektime = () => {
+  const handleCoordinates = () => {
     socket.on("stream", (data) => {
-      const seekTime = JSON.parse(data) as number;
-      setSeek(seekTime);
+      const connections = JSON.parse(data) as IConnections;
+      console.log("stream", connections.seekTime);
+      video.currentTime = connections.seekTime;
     });
+
+    socket.on("connections", (data) => {
+      const connections = JSON.parse(data) as IConnections;
+      // console.log("[CONNECTIONS]: ", connections);
+      const coordinates: number[][] = [];
+      Object.keys(connections.clients).map((clientId) => {
+        coordinates.push(connections.clients[clientId]);
+      });
+      // console.log("COORDINATES: ", coordinates);
+      setAvatarPositions(coordinates);
+    });
+
+    setInterval(() => {
+      socket.emit(
+        "stream",
+        JSON.stringify({ type: "stream", seekTime: video.currentTime })
+      );
+    }, 500);
   };
 
   useEffect(() => {
-    handleSeektime();
+    handleCoordinates();
   }, []);
 
   return (

@@ -1,20 +1,20 @@
 const handleNewClient = (serverSocket, connections) => {
+  connections.clients[serverSocket.id] = [0, 0, 0];
+
   //  assigning admin
   if (Object.keys(connections.clients).length === 1)
     connections.admin = serverSocket.id;
-
-  connections.clients[serverSocket.id] = [0, 0, 0];
 };
 
-const handleDeleteClient = (connections, socket) => {
-  console.log("[DELETING]: ", socket.id);
-  delete connections.clients[socket.id];
+const handleDeleteClient = (connections, clientId) => {
+  console.log("[DELETING]: ", clientId);
+  delete connections.clients[clientId];
 
   // finding new admin if current admin left
-  if (socket.id === connections.admin) {
+  if (clientId === connections.admin) {
     let adminId = "";
     if (Object.keys(connections.clients).length >= 1)
-      adminId = Object.keys(connections.clients)[1];
+      adminId = Object.keys(connections.clients)[0];
     connections.admin = "";
   }
 };

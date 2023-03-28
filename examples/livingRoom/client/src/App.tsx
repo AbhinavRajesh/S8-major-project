@@ -7,7 +7,7 @@ import Controller from "./utils/Controller";
 import Avatars from "./utils/Avatars";
 import Room from "./Room";
 import AudioChannel from "./Audio";
-import { socket } from "./utils/socket"
+import { socket } from "./utils/socket";
 
 interface IConnections {
   serverEndpoint: string;
@@ -22,12 +22,12 @@ function App() {
   const handleCoordinates = () => {
     socket.on("connections", (data) => {
       const connections = JSON.parse(data) as IConnections;
-      console.log("[CONNECTIONS]: ", connections)
+      console.log("[CONNECTIONS]: ", connections);
       const coordinates: number[][] = [];
       Object.keys(connections.clients).map((clientId) => {
         coordinates.push(connections.clients[clientId]);
       });
-      console.log("COORDINATES: ", coordinates)
+      console.log("COORDINATES: ", coordinates);
       setAvatarPositions(coordinates);
     });
   };

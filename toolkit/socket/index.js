@@ -9,7 +9,13 @@ const socket = (io, connections) => {
     console.log("Made socket connection: ", socket.id);
     handleNewClient(socket, connections);
 
-    socket.on("stream", (data) => handleStream(data, connections));
+    if (socket.id !== connections.admin) {
+      // only the first time when joined,
+      // the seek time is synced with server
+      socket.emit("stream", JSON.stringify(connections));
+    }
+
+    socket.on("stream", (data) => handleStream(data, connections, socket.id));
 
     socket.on("coordinates", (data) =>
       handleCoordinates(data, connections, socket.id)
