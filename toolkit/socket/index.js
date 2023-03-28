@@ -12,6 +12,9 @@ const socket = (io, connections) => {
     socket.on("voice", (data) =>
       handleVoiceChannel(data, io, socket, connections)
     );
+    socket.on("disconnect", () => {
+      delete connections.clients[socket.id]
+    })
   });
 
   // Send all project data to every client on every 5 seconds
