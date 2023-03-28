@@ -27,6 +27,7 @@ function App() {
       Object.keys(connections.clients).map((clientId) => {
         coordinates.push(connections.clients[clientId]);
       });
+      console.log("COORDINATES: ", coordinates)
       setAvatarPositions(coordinates);
     });
   };

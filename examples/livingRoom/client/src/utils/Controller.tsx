@@ -10,7 +10,7 @@ const Controller = () => {
       console.log("[SENDING COORDINATES]: ", camera.position)
       socket.emit("coordinates", JSON.stringify({
         type: "coordinates",
-        position: camera.position
+        position: camera.position.toArray()
       }))
       setPaused(() => true);
     }
