@@ -1,5 +1,8 @@
 const handleNewClient = (serverSocket, connections) => {
-  connections.clients[serverSocket.id] = [0, 0, 0];
+  connections.clients[serverSocket.id] = {
+    position: [0, 0, 0],
+    rotation: [0, 0, 0, 'XYZ']
+  };
 
   //  assigning admin
   if (Object.keys(connections.clients).length === 1)

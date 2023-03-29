@@ -6,10 +6,11 @@ const Avatars = ({ positions }: { positions: any }) => {
 
   useEffect(() => {
     if (positions) {
-      const temp = positions?.map((position: any, key: any) => {
+      const temp = positions?.map(({position, rotation}: any, key: any) => {
         return (
           <Avatar
             position={position}
+            rotation={rotation}
             key={key}
             model={`/avatar/scene.gltf?randomId=${key}`}
           />

@@ -22,7 +22,7 @@ const Avatar = (props: any) => {
         props.position[1] - 1.6,
         props.position[2] + 0.1,
       ]}
-      rotation={[0, Math.PI, 0]}
+      // rotation={props.rotation}
     >
       <group rotation={[-Math.PI / 2, 0, 0]} scale={0.97}>
         <group rotation={[Math.PI / 2, 0, 0]}>
